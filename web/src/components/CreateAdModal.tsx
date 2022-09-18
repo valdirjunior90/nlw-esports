@@ -1,6 +1,6 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import * as Checkbox from '@radix-ui/react-checkbox'
-import * as Select from '@radix-ui/react-select';
+import * as ToggleGroup from '@radix-ui/react-toggle-group';
 import { Check, GameController } from 'phosphor-react';
 import { Input } from './Form/Input';
 import { useEffect, useState } from 'react';
@@ -50,51 +50,58 @@ export const CreateAdModal = () => {
                 <div className='flex gap-6'>
                   <div className='flex flex-col gap-2'>
                     <label htmlFor="weekDays">Quando Costuma jogar?</label>
-                    <div className='grid grid-cols-4 gap-2'>
-                      <button 
+                    <ToggleGroup.Root type='multiple' className='grid grid-cols-4 gap-2'>
+                      <ToggleGroup.Item 
+                        value='0'
                         title="domingo"
                         className='w-8 h-8 rounded bg-zinc-900'
                       >
                         D
-                      </button>
-                      <button 
+                      </ToggleGroup.Item>
+                      <ToggleGroup.Item
+                        value='1' 
                         title="segunda"
                         className='w-8 h-8 rounded bg-zinc-900'
                       >
                         S
-                      </button>
-                      <button 
+                      </ToggleGroup.Item>
+                      <ToggleGroup.Item
+                        value='2'
                         title="terça"
                         className='w-8 h-8 rounded bg-zinc-900'
                       >
                         T
-                      </button>
-                      <button 
+                      </ToggleGroup.Item>
+                      <ToggleGroup.Item 
+                        value='3'
                         title="quarta"
                         className='w-8 h-8 rounded bg-zinc-900'
                       >
                         Q
-                      </button>
-                      <button 
+                      </ToggleGroup.Item>
+                      <ToggleGroup.Item 
+                        value='4'
                         title="quinta"
                         className='w-8 h-8 rounded bg-zinc-900'
                       >
                         Q
-                      </button>
-                      <button 
+                      </ToggleGroup.Item>
+                      <ToggleGroup.Item 
+                        value='5'
                         title="sexta"
                         className='w-8 h-8 rounded bg-zinc-900'
                         
                       >
                         S
-                      </button>
-                      <button 
+                      </ToggleGroup.Item>
+                      <ToggleGroup.Item 
+                        value='6'
                         title="sabado"
                         className='w-8 h-8 rounded bg-zinc-900'
                       >
                         S
-                      </button>
-                    </div>
+                      </ToggleGroup.Item>
+                    </ToggleGroup.Root>
                   </div>
                   <div className='flex flex-col gap-2 flex-1'>
                     <label htmlFor="hourStart"></label>
