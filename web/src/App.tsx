@@ -1,6 +1,6 @@
 import './styles/main.css'
 import logoImg from './assets/logo-nlw-esports.svg'
-import {GameController, MagnifyingGlassPlus} from 'phosphor-react';
+import axios from 'axios'
 import { GameBanner } from './components/GameBanner';
 import { CreateAdBanner } from './components/CreateAdBanner';
 import { useEffect, useState } from 'react';
@@ -19,10 +19,9 @@ export interface Game {
 function App() {
   const [games, setGames] = useState<Game[]>([]);
   useEffect(()=>{
-    fetch('http://localhost:3333/games')
-    .then(response => response.json())
-    .then(data =>{
-      setGames(data)
+    axios('http://localhost:3333/games')
+    .then(response =>{
+      setGames(response.data)
     })
   },[])
 

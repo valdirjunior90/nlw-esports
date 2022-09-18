@@ -1,6 +1,7 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import * as Checkbox from '@radix-ui/react-checkbox'
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
+import axios from 'axios'
 import { Check, GameController } from 'phosphor-react';
 import { Input } from './Form/Input';
 import { useEffect, useState, FormEvent } from 'react';
@@ -10,18 +11,42 @@ export const CreateAdModal = () => {
 
   const [games, setGames] = useState<Game[]>([]);
   const [weekDays, setWeekDays] = useState<string[]>([]);
+  const [useVoiceChannel,setUseVoiceChannel] = useState<boolean>(false)
 
-  const handleCreateAd = (event:FormEvent) => {
+  const handleCreateAd = async (event:FormEvent) => {
     event.preventDefault();
-    console.log('enviou o form')
+    const formData = new FormData(event.target as HTMLFormElement)
+    const {name,yearsPlaying,discord,hourStart,hourEnd,game} = Object.fromEntries(formData)
+  
+    if(!name){
+      return
+    }
+
+    try{
+      await axios.post(`http://localhost:3333/games/${game}/ads`,{
+        name,
+        yearsPlaying:Number(yearsPlaying),
+        discord,
+        weekDays: weekDays.map(Number),
+        hourStart,
+        hourEnd,
+        useVoiceChannel
+      })
+      alert('Anúncio criado com sucesso!')
+    }catch(err){
+      console.log(err)
+      alert('Erro ao criar o anuncio!')
+    }
+    
   }
+
+  
 
 
   useEffect(()=>{
-    fetch('http://localhost:3333/games')
-    .then(response => response.json())
-    .then(data =>{
-      setGames(data)
+    axios('http://localhost:3333/games')
+    .then(response =>{
+      setGames(response.data)
     })
   },[])
   
@@ -34,6 +59,7 @@ export const CreateAdModal = () => {
                 <div className="flex flex-col gap-2">
                   <label htmlFor="game" className="font-semibold" >Qual o game?</label>
                   <select 
+                    name='game'
                     id="game"
                     className='bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500 appearance-none'
                     defaultValue=""
@@ -43,17 +69,17 @@ export const CreateAdModal = () => {
                   </select>
                 </div>
                 <div className='flex flex-col gap-2'>
-                  <label htmlFor="name">Seu nome (ou nickname)</label>
-                  <Input type="text" id="name" placeholder='Como te chamam dentro do game?' />
+                  <label  htmlFor="name">Seu nome (ou nickname)</label>
+                  <Input name='name' type="text" id="name" placeholder='Como te chamam dentro do game?' />
                 </div>
                 <div className='grid grid-cols-2 gap-6'> 
                   <div className='flex flex-col gap-2'>
                     <label htmlFor="yearsPlaying"> Joga a quantos anos?</label>
-                    <Input type="number" placeholder="Tudo bem ser ZERO" />
+                    <Input name='yearsPlaying' type="number" placeholder="Tudo bem ser ZERO" />
                   </div>
                   <div className='flex flex-col gap-2'>
                     <label htmlFor="discord">Qual o seu Discord?</label>
-                    <Input type="text" placeholder="Usuario#0000" />
+                    <Input name="discord" type="text" placeholder="Usuario#0000" />
                   </div>
                 </div>
                 <div className='flex gap-6'>
@@ -120,14 +146,14 @@ export const CreateAdModal = () => {
                   <div className='flex flex-col gap-2 flex-1'>
                     <label htmlFor="hourStart"></label>
                     <div className='grid grid-cols-2 gap-1'>
-                      <Input type="time" placeholder="De"/>
-                      <Input type="time" placeholder="Até"/>
+                      <Input name='hourStart' type="time" id="hourStart" placeholder="De"/>
+                      <Input name='hourEnd' type="time" id="hourEnd" placeholder="Até"/>
                     </div>
                   </div>
                 </div>
 
                 <label className='mt-2 flex items-center gap-2 text-sm'>
-                  <Checkbox.Root className="w-6 h-6 p-1 rounded bg-zinc-900">
+                  <Checkbox.Root onCheckedChange={(useVoice)=>setUseVoiceChannel(useVoice as boolean)} className="w-6 h-6 p-1 rounded bg-zinc-900">
                     <Checkbox.Indicator>
                       <Check className='w-4 h-4 text-emerald-400' />
                     </Checkbox.Indicator>
