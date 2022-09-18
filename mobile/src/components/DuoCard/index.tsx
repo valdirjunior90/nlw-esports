@@ -13,7 +13,7 @@ export interface DuoCardProps {
   name: string,
   useVoiceChannel: boolean,
   weekDays: string[],
-  yearsPlaying: number,
+  yearsPlaying: number
 }
 
 interface Props {
